@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 // const http = require('http');
 // const express = require('express');
 //
@@ -12,17 +11,24 @@
 // });
 
 const express = require('express');
+const mongoose = require('mongoose');
 
+// eslint-disable-next-line no-unused-vars
+const db = mongoose.connect('mongodb://localhost/bookAPI');
 const bookRouter = express();
 const app = express();
-
 const port = process.env.PORT || 2005;
+
+const Book = require('./models/bookModel');
 
 bookRouter.route('/books')
   .get((req, res) => {
-    const response = { hello: 'This is my API' };
-
-    res.json(response);
+    Book.find((err, books) => {
+      if (err) {
+        return res.send(err);
+      }
+      return res.json(books);
+    });
   });
 
 app.use('/api', bookRouter);
